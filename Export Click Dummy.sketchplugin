@@ -2,8 +2,8 @@
 
 #import 'library.js'
 
-// HTML will be exported to the .sketch file's parent folder
-var documentPath = [[doc fileURL] path].split([doc displayName])[0];
+// HTML will be exported to a new folder in the .sketch file's parent folder
+var documentPath = [[doc fileURL] path] + '-ClickDummy/';
 
 var html = '';
 
@@ -42,6 +42,8 @@ var HTML_FOOT = '</body></html>\n';
 
 var artboards = doc.currentPage().artboards().objectEnumerator();
 
+createFolder(documentPath);
+
 while (artboard = artboards.nextObject()) {
 
   var artboardName = artboard.name().trim();
@@ -56,11 +58,11 @@ while (artboard = artboards.nextObject()) {
 
     var name = layer.name();
 
-    if (name == linkLayerPrefix || name.indexOf(linkLayerPrefix) != -1) {
+    if (name === linkLayerPrefix || name.indexOf(linkLayerPrefix) !== -1) {
 
       var linkTarget = name.substr(linkLayerPrefix.length);
 
-      if (linkTarget!='' && linkTarget !== null && linkTarget !== undefined) {
+      if (linkTarget !== '' && linkTarget !== null && linkTarget !== undefined) {
         linkTarget = linkTarget + '.html';
       } else {
         linkTarget = '';
@@ -91,7 +93,13 @@ while (slice = slices.nextObject()) {
 
 showLinkLayers();
 
-doc.showMessage('Click dummy files exported to: ' + documentPath + '');
+doc.showMessage('Click dummy files exported to: ' + documentPath);
+
+function createFolder(name) {
+  var fileManager = [NSFileManager defaultManager];
+  [fileManager createDirectoryAtPath:name withIntermediateDirectories:true attributes:nil error:nil];
+}
+
 function saveTextToFile (filename, text) {
   var path = [@"" stringByAppendingString:filename];
   var str = [@"" stringByAppendingString:text];
