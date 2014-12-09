@@ -1,99 +1,108 @@
 // (shift control cmd e)
 
 #import 'library.js'
+#import 'sandbox.js'
 
-// HTML will be exported to a new folder in the .sketch file's parent folder
-var documentPath = [[doc fileURL] path] + '-ClickDummy/';
+var documentPath = [[doc fileURL] path].split([doc displayName])[0];
 
-var html = '';
+new AppSandbox().authorize(documentPath, exportClickDummy);
 
-var HTML_HEAD = '<!DOCTYPE html>\n\
-<html lang="en">\n\
-<head>\n\
-  <meta charset="utf-8">\n\
-  <title>' + [doc displayName] + '</title>\n\
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n\
-  <script type="text/javascript"> \n\
-    document.onmousedown = function() { \n\
-      document.body.setAttribute("class", "is-highlighted"); \n\
-    } \n\
-    document.onmouseup = function() { \n\
-      document.body.setAttribute("class", ""); \n\
-    } \n\
-  </script> \n\
-  <style> \n\
-    html, body { \n\
-      padding: 0; \n\
-      margin: 0; \n\
-    } \n\
-    a { \n\
-      position: absolute; \n\
-      z-index: 100; \n\
-    } \n\
-    body.is-highlighted a { \n\
-      background-color: #0000ff; \n\
-      opacity: .2; \n\
-    } \n\
-  </style> \n\
-</head>\n\
-<body>\n';
+function exportClickDummy () {
 
-var HTML_FOOT = '</body></html>\n';
+  // HTML will be exported to a new folder in the .sketch file's parent folder
+  var exportPath = [[doc fileURL] path] + '-ClickDummy/';
 
-var artboards = doc.currentPage().artboards().objectEnumerator();
+  var html = '';
 
-createFolder(documentPath);
+  var HTML_HEAD = '<!DOCTYPE html>\n\
+  <html lang="en">\n\
+  <head>\n\
+    <meta charset="utf-8">\n\
+    <title>' + [doc displayName] + '</title>\n\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n\
+    <script type="text/javascript"> \n\
+      document.onmousedown = function() { \n\
+        document.body.setAttribute("class", "is-highlighted"); \n\
+      } \n\
+      document.onmouseup = function() { \n\
+        document.body.setAttribute("class", ""); \n\
+      } \n\
+    </script> \n\
+    <style> \n\
+      html, body { \n\
+        padding: 0; \n\
+        margin: 0; \n\
+      } \n\
+      a { \n\
+        position: absolute; \n\
+        z-index: 100; \n\
+      } \n\
+      body.is-highlighted a { \n\
+        background-color: #0000ff; \n\
+        opacity: .2; \n\
+      } \n\
+    </style> \n\
+  </head>\n\
+  <body>\n';
 
-while (artboard = artboards.nextObject()) {
+  var HTML_FOOT = '</body></html>\n';
 
-  var artboardName = artboard.name().trim();
+  var artboards = doc.currentPage().artboards().objectEnumerator();
 
-  html = HTML_HEAD;
-  html += '<!-- ' + artboardName + ' -->\n';
-  html += '<img src="img/' + artboardName + '.png">\n';
+  createFolder(exportPath);
 
-  var layers = artboard.children().objectEnumerator();
+  while (artboard = artboards.nextObject()) {
 
-  while (layer = layers.nextObject()) {
+    var artboardName = artboard.name().trim();
 
-    var name = layer.name();
+    html = HTML_HEAD;
+    html += '<!-- ' + artboardName + ' -->\n';
+    html += '<img src="img/' + artboardName + '.png">\n';
 
-    if (name === linkLayerPrefix || name.indexOf(linkLayerPrefix) !== -1) {
+    var layers = artboard.children().objectEnumerator();
 
-      var linkTarget = name.substr(linkLayerPrefix.length);
+    while (layer = layers.nextObject()) {
 
-      if (linkTarget !== '' && linkTarget !== null && linkTarget !== undefined) {
-        linkTarget = linkTarget + '.html';
-      } else {
-        linkTarget = '';
-      }
+      var name = layer.name();
 
-      if (typeof layer.frame === 'function') {
-        var lx = layer.frame().x();
-        var ly = layer.frame().y();
-        var lw = layer.frame().width();
-        var lh = layer.frame().height();
-        html = html + '<a href="' + linkTarget + '" style="left: ' + lx + 'px; top: ' + ly + 'px; width: ' + lw + 'px; height: ' + lh + 'px"></a>\n';
+      if (name === linkLayerPrefix || name.indexOf(linkLayerPrefix) !== -1) {
+
+        var linkTarget = name.substr(linkLayerPrefix.length);
+
+        if (linkTarget !== '' && linkTarget !== null && linkTarget !== undefined) {
+          linkTarget = linkTarget + '.html';
+        } else {
+          linkTarget = '';
+        }
+
+        if (typeof layer.frame === 'function') {
+          var lx = layer.frame().x();
+          var ly = layer.frame().y();
+          var lw = layer.frame().width();
+          var lh = layer.frame().height();
+          html = html + '<a href="' + linkTarget + '" style="left: ' + lx + 'px; top: ' + ly + 'px; width: ' + lw + 'px; height: ' + lh + 'px"></a>\n';
+        }
       }
     }
+    html += HTML_FOOT;
+
+    var htmlPath = exportPath + artboardName + '.html';
+    saveTextToFile(htmlPath, html);
   }
-  html += HTML_FOOT;
 
-  var htmlPath = documentPath + artboardName + '.html';
-  saveTextToFile(htmlPath, html);
+  hideLinkLayers();
+
+  var slices = doc.currentPage().artboards().objectEnumerator();
+
+  while (slice = slices.nextObject()) {
+    [doc saveArtboardOrSlice:slice toFile:exportPath + 'img/' + slice.name() + '.png'];
+  }
+
+  showLinkLayers();
+
+  doc.showMessage('Click dummy files exported to: ' + exportPath);
+
 }
-
-hideLinkLayers();
-
-var slices = doc.currentPage().artboards().objectEnumerator();
-
-while (slice = slices.nextObject()) {
-  [doc saveArtboardOrSlice:slice toFile:documentPath + 'img/' + slice.name() + '.png'];
-}
-
-showLinkLayers();
-
-doc.showMessage('Click dummy files exported to: ' + documentPath);
 
 function createFolder(name) {
   var fileManager = [NSFileManager defaultManager];
