@@ -2,6 +2,8 @@
 
 Exports a simple HTML click dummy so you can easily prototype flows between your screens.
 
+![Sketch Click Dummy](https://cloud.githubusercontent.com/assets/418877/5399581/ea714a12-816c-11e4-94a7-57116412d697.png)
+
 # Installation
 Download this plugin and [put it in your Sketch plugins folder](http://bohemiancoding.com/sketch/support/developer/01-introduction/01.html).
 
