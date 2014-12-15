@@ -13,6 +13,8 @@ function exportClickDummy () {
   var exportPath = [[doc fileURL] path] + '-ClickDummy/';
 
   var html = '';
+  var artboardNames = [];
+  var linkTargets = [];
 
   var HTML_HEAD = '<!DOCTYPE html>\n\
   <html lang="en">\n\
@@ -55,6 +57,8 @@ function exportClickDummy () {
 
     var artboardName = artboard.name().trim();
 
+    artboardNames.push(artboardName);
+
     html = HTML_HEAD;
     html += '<!-- ' + artboardName + ' -->\n';
     html += '<img src="img/' + artboardName + '.png">\n';
@@ -68,6 +72,7 @@ function exportClickDummy () {
       if (name === linkLayerPrefix || name.indexOf(linkLayerPrefix) !== -1) {
 
         var linkTarget = name.substr(linkLayerPrefix.length);
+        linkTargets.push(linkTarget);
 
         if (linkTarget !== '' && linkTarget !== null && linkTarget !== undefined) {
           linkTarget = linkTarget + '.html';
@@ -100,8 +105,27 @@ function exportClickDummy () {
 
   showLinkLayers();
 
-  doc.showMessage('Click dummy files exported to: ' + exportPath);
+  displayMissingArtboardsWarnings(linkTargets, artboardNames);
 
+  doc.showMessage('Click dummy files exported to: ' + exportPath);
+}
+
+function displayMissingArtboardsWarnings (targets, artboards) {
+  // Display a warning if there are link targets on this page that don't have a corresponding artboard
+  var warnings = '';
+  targets.sort();
+  for (var i = 0; i < targets.length; i++) {
+    var target = targets[i];
+    if (artboards.indexOf(target) === -1) {
+      warnings += '\n· ' + target
+    };
+  };
+
+  if (warnings !== '') {
+    warnings += '\n\nDon’t worry, the prototype will be exported anyway.'
+    var app = [NSApplication sharedApplication];
+    [app displayDialog:warnings withTitle:"There are links to missing artboards:"];
+  }
 }
 
 function createFolder(name) {
