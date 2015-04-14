@@ -9,7 +9,7 @@ var fileURL = fileSaver();
 var exportPath = fileURL.path() + '/' + [doc displayName] + '-ClickDummy/';
 
 // Authorize Sketch to save a file
-new AppSandbox().authorize(path, exportClickDummy);
+new AppSandbox().authorize(exportPath, exportClickDummy);
 
 
 function exportClickDummy () {
