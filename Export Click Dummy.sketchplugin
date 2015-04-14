@@ -3,7 +3,7 @@
 #import 'library.js'
 #import 'sandbox.js'
 
-var documentPath = [[doc fileURL] path].split([doc displayName])[0];
+var documentPath = [[doc fileURL] path].split([doc displayName] + ".sketch")[0];
 
 new AppSandbox().authorize(documentPath, exportClickDummy);
 
