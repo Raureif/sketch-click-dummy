@@ -3,14 +3,19 @@
 #import 'library.js'
 #import 'sandbox.js'
 
-var documentPath = [[doc fileURL] path].split([doc displayName] + ".sketch")[0];
 
-new AppSandbox().authorize(documentPath, exportClickDummy);
+// open the system dialog to choose the export location
+var fileURL = fileSaver();
+var exportPath = fileURL.path() + '/' + [doc displayName] + '-ClickDummy/';
+
+// Authorize Sketch to save a file
+new AppSandbox().authorize(exportPath, exportClickDummy);
+
 
 function exportClickDummy () {
 
   // HTML will be exported to a new folder in the .sketch file's parent folder
-  var exportPath = [[doc fileURL] path] + '-ClickDummy/';
+  // var exportPath = [[doc fileURL] path] + '-ClickDummy/';
 
   var html = '';
   var artboardNames = [];
@@ -137,4 +142,28 @@ function saveTextToFile (filename, text) {
   var path = [@"" stringByAppendingString:filename];
   var str = [@"" stringByAppendingString:text];
   str.dataUsingEncoding_(NSUTF8StringEncoding).writeToFile_atomically_(path, true);
+}
+
+function fileSaver() {
+    // Panel
+    var openPanel = [NSOpenPanel openPanel]
+
+    [openPanel setTitle: "Choose a location…"]
+    [openPanel setMessage: "Select the export location…"];
+    [openPanel setPrompt: "Export"];
+
+    [openPanel setCanCreateDirectories: true]
+    [openPanel setCanChooseFiles: false]
+    [openPanel setCanChooseDirectories: true]
+    [openPanel setAllowsMultipleSelection: false]
+    [openPanel setShowsHiddenFiles: false]
+    [openPanel setExtensionHidden: false]
+
+    // [openPanel setDirectoryURL:url]
+
+    var openPanelButtonPressed = [openPanel runModal]
+    if (openPanelButtonPressed == NSFileHandlingPanelOKButton) {
+        allowedUrl = [openPanel URL]
+    }
+    return allowedUrl
 }
