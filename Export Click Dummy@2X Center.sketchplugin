@@ -28,11 +28,11 @@ function exportClickDummy () {
     <title>' + [doc displayName] + '</title>\n\
     <meta name="viewport" content="width=device-width, initial-scale=1.0">\n\
     <script type="text/javascript"> \n\
-      document.onmousedown = function() { \n\
+      document.onclick = function(ev) { \n\
+        if (ev.target.tagName != "A") {\n\
         document.body.setAttribute("class", "is-highlighted"); \n\
-      } \n\
-      document.onmouseup = function() { \n\
-        document.body.setAttribute("class", ""); \n\
+        setTimeout(function(){ document.body.setAttribute("class", ""); },150); \n\
+      	}\n\
       } \n\
     </script> \n\
     <style> \n\
@@ -97,7 +97,7 @@ function exportClickDummy () {
       }
     }
     
-    html += '<style>#container { width:' + artboardWidth + 'px;position:relative;margin:0 auto; } a:hover { opacity: 0.4; border:1px solid #d4d4d4; background-color:#f4f4f4; }</style>';
+    html += '<style>#container { width:' + artboardWidth + 'px;position:relative;margin:0 auto; } </style>';
     html += HTML_FOOT;
 
     var htmlPath = exportPath + artboardName + '.html';
