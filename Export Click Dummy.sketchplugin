@@ -40,6 +40,9 @@ function exportClickDummy () {
         padding: 0; \n\
         margin: 0; \n\
       } \n\
+      body { \n\
+        text-align: center; \n\
+      } \n\
       a { \n\
         position: absolute; \n\
         z-index: 100; \n\
@@ -48,11 +51,15 @@ function exportClickDummy () {
         background-color: #0000ff; \n\
         opacity: .2; \n\
       } \n\
+      main { \n\
+        position: relative; \n\
+        display: inline-block; \n\
+      } \n\
     </style> \n\
   </head>\n\
-  <body>\n';
+  <body><main>\n';
 
-  var HTML_FOOT = '</body></html>\n';
+  var HTML_FOOT = '</main></body></html>\n';
 
   var artboards = doc.currentPage().artboards().objectEnumerator();
 
