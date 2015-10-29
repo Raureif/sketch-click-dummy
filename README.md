@@ -5,7 +5,10 @@ Exports a simple HTML click dummy so you can easily prototype flows between your
 ![Sketch Click Dummy](https://cloud.githubusercontent.com/assets/418877/5471648/6ff1f756-85f8-11e4-9645-05e76d699709.png)
 
 # Installation
-Download this plugin and [put it in your Sketch plugins folder](http://bohemiancoding.com/sketch/support/developer/01-introduction/01.html).
+1. Download this plugin
+2. Create a folder called "Click Dummy" in your [plugins folder](http://bohemiancoding.com/sketch/support/developer/01-introduction/01.html)
+3. Put the contents of the downloaded folder into the created one
+4. Re-start Sketch
 
 # How to use
 - To create a link placeholder, draw a rectangle and rename it to _linkto:ArtboardName_.
