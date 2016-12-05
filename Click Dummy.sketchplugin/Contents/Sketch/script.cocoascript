@@ -1,18 +1,29 @@
-// (shift control cmd e)
+@import 'library.js';
+@import 'sandbox.js';
 
-#import 'library.js'
-#import 'sandbox.js'
+var toggleLinkLayers = function (context) {
+  var doc = context.document
 
+  var didShowLayers = toggle(context);
 
-// open the system dialog to choose the export location
-var fileURL = fileSaver();
-var exportPath = fileURL.path() + '/' + [doc displayName] + '-ClickDummy/';
+  if (didShowLayers === true){
+    doc.showMessage('Link layers shown.');
+  } else {
+    doc.showMessage('Link layers hidden.');
+  }
+}
 
-// Authorize Sketch to save a file
-new AppSandbox().authorize(exportPath, exportClickDummy);
+var exportClickDummy = function(context) {
 
+  var doc = context.document
 
-function exportClickDummy () {
+  // open the system dialog to choose the export location
+  var fileURL = fileSaver();
+  var exportPath = fileURL.path() + '/' + [doc displayName] + '-ClickDummy/';
+
+  // Authorize Sketch to save a file
+  // new AppSandbox().authorize(exportPath, exportClickDummy);
+
 
   // HTML will be exported to a new folder in the .sketch file's parent folder
   // var exportPath = [[doc fileURL] path] + '-ClickDummy/';
@@ -71,9 +82,12 @@ function exportClickDummy () {
 
     artboardNames.push(artboardName);
 
+    var img1x = 'img/' + artboardName + '.png';
+    // var img2x = 'img/' + artboardName + '-2x.png';
+
     html = HTML_HEAD;
     html += '<!-- ' + artboardName + ' -->\n';
-    html += '<img src="img/' + artboardName + '.png">\n';
+    html += '<img src="' + img1x + /*'" srcset="' + img2x + ' 2x*/'">\n';
 
     var layers = artboard.children().objectEnumerator();
 
@@ -107,20 +121,27 @@ function exportClickDummy () {
     saveTextToFile(htmlPath, html);
   }
 
-  hideLinkLayers();
+  hideLinkLayers(context);
 
   var slices = doc.currentPage().artboards().objectEnumerator();
 
   while (slice = slices.nextObject()) {
+
     [doc saveArtboardOrSlice:slice toFile:exportPath + 'img/' + slice.name() + '.png'];
+
+    // FIXME: This doesn’t work.:(
+    // slice.scale = 2;
+    // [doc saveArtboardOrSlice:tempSlice toFile:exportPath + 'img/' + slice.name() + '-2x.png'];
   }
 
-  showLinkLayers();
+  showLinkLayers(context);
 
   displayMissingArtboardsWarnings(linkTargets, artboardNames);
 
   doc.showMessage('Click dummy files exported to: ' + exportPath);
-}
+
+};
+
 
 function displayMissingArtboardsWarnings (targets, artboards) {
   // Display a warning if there are link targets on this page that don't have a corresponding artboard

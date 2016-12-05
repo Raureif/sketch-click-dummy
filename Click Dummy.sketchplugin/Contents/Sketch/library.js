@@ -1,18 +1,19 @@
 var linkLayerPrefix = "linkto:";
 
-function showLinkLayers () {
-  return showOrHideLinkLayers(true);
+function showLinkLayers (context) {
+  return showOrHideLinkLayers(context, true);
 }
 
-function hideLinkLayers () {
-  return showOrHideLinkLayers(false);
+function hideLinkLayers (context) {
+  return showOrHideLinkLayers(context, false);
 }
 
-function toggleLinkLayers() {
-  return showOrHideLinkLayers (-1);
+function toggle(context) {
+  return showOrHideLinkLayers (context, -1);
 }
 
-function showOrHideLinkLayers (shouldShowLayers) {
+function showOrHideLinkLayers (context, shouldShowLayers) {
+  var doc = context.document
   var layers = doc.currentPage().children().objectEnumerator();
   while (layer = layers.nextObject()) {
 
