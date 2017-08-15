@@ -9,7 +9,9 @@ Exports a simple HTML click dummy so you can easily prototype flows between your
 2. Open the `.sketchplugin` file.
 
 # How to use
-- To create a link placeholder, draw a rectangle and rename it to _linkto:ArtboardName_.
+- To create a link placeholder, draw a rectangle and rename it to `linkto:ArtboardName`. 
+
+- If you want to open the link in a new tab, rename the rectangle to `tabto:ArtboardName`.
 - From the _Plugins_ Menu, choose _Show or Hide Link Layers_ (^⇧⌘H) to toggle visibility of the link placeholder layers.
 - Use _Export Click Dummy_ (^⇧⌘E) to export the HTML click dummy.
 - Have a look at the Sketch file `Example.sketch` to get started.

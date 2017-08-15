@@ -76,47 +76,45 @@ var exportClickDummy = function(context) {
 
   createFolder(exportPath);
 
-  while (artboard = artboards.nextObject()) {
+  while (artboard = artboards.nextObject()){
 
     var artboardName = artboard.name().trim();
-
     artboardNames.push(artboardName);
 
     var img1x = 'img/' + artboardName + '.png';
-    // var img2x = 'img/' + artboardName + '-2x.png';
+     // var img2x = 'img/' + artboardName + '-2x.png';
 
     html = HTML_HEAD;
     html += '<!-- ' + artboardName + ' -->\n';
     html += '<img src="' + img1x + /*'" srcset="' + img2x + ' 2x*/'">\n';
 
     var layers = artboard.children().objectEnumerator();
-
     while (layer = layers.nextObject()) {
-
       var name = layer.name();
 
-      if (name === linkLayerPrefix || name.indexOf(linkLayerPrefix) !== -1) {
+      for(var i = 0; i<linkLayerPrefix.length; i++) {
+        var prefix = linkLayerPrefix[i];
 
-        var linkTarget = name.substr(linkLayerPrefix.length);
-        linkTargets.push(linkTarget);
-
-        if (linkTarget !== '' && linkTarget !== null && linkTarget !== undefined) {
-          linkTarget = linkTarget + '.html';
-        } else {
-          linkTarget = '';
+        if (name === prefix || name.indexOf(prefix) !== -1) {
+          var linkTarget = name.substr(prefix.length);
+          linkTargets.push(linkTarget);
+          if (linkTarget !== '' && linkTarget !== null && linkTarget !== undefined) {
+            linkTarget = linkTarget + '.html';
+          } else {
+            linkTarget = '';
+          }
+          if (typeof layer.frame === 'function') {
+            var lx = layer.frame().x();
+            var ly = layer.frame().y();
+            var lw = layer.frame().width();
+            var lh = layer.frame().height();
+            html = html + '<a href="' + linkTarget + '" target="' + linkTargetAttribute[i] + '" style="left: ' + lx + 'px; top: ' + ly + 'px; width: ' + lw + 'px; height: ' + lh + 'px"></a>\n';
+            log(html);
+          }
         }
-
-        if (typeof layer.frame === 'function') {
-          var lx = layer.frame().x();
-          var ly = layer.frame().y();
-          var lw = layer.frame().width();
-          var lh = layer.frame().height();
-          html = html + '<a href="' + linkTarget + '" style="left: ' + lx + 'px; top: ' + ly + 'px; width: ' + lw + 'px; height: ' + lh + 'px"></a>\n';
-        }
-      }
-    }
+      } //for
+    } //while layers
     html += HTML_FOOT;
-
     var htmlPath = exportPath + artboardName + '.html';
     saveTextToFile(htmlPath, html);
   }
