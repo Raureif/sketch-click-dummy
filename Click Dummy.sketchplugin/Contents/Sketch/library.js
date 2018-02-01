@@ -1,4 +1,5 @@
 var linkLayerPrefix = "linkto:";
+var backLinkKeyword = "$BACK";
 
 function showLinkLayers (context) {
   return showOrHideLinkLayers(context, true);

@@ -10,6 +10,7 @@ Exports a simple HTML click dummy so you can easily prototype flows between your
 
 # How to use
 - To create a link placeholder, draw a rectangle and rename it to _linkto:ArtboardName_.
+- Rename the rectangle to _linkto:$BACK_ if you want to create a back link.
 - From the _Plugins_ Menu, choose _Show or Hide Link Layers_ (^⇧⌘H) to toggle visibility of the link placeholder layers.
 - Use _Export Click Dummy_ (^⇧⌘E) to export the HTML click dummy.
 - Have a look at the Sketch file `Example.sketch` to get started.

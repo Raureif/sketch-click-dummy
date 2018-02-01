@@ -101,7 +101,11 @@ var exportClickDummy = function(context) {
         linkTargets.push(linkTarget);
 
         if (linkTarget !== '' && linkTarget !== null && linkTarget !== undefined) {
-          linkTarget = linkTarget + '.html';
+          if (linkTarget === backLinkKeyword) {
+            linkTarget = 'javascript:history.back()';
+          } else {
+            linkTarget = linkTarget + '.html';
+          }
         } else {
           linkTarget = '';
         }
@@ -149,7 +153,7 @@ function displayMissingArtboardsWarnings (targets, artboards) {
   targets.sort();
   for (var i = 0; i < targets.length; i++) {
     var target = targets[i];
-    if (artboards.indexOf(target) === -1) {
+    if (artboards.indexOf(target) === -1 && target !== backLinkKeyword) {
       warnings += '\n· ' + target
     };
   };
